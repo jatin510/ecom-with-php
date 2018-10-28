@@ -124,10 +124,7 @@ DELIMETER;
 }//end of function
 
 
-function report(){
-    //paypal variables
-
-    global $connection;
+function process_transaction(){ 
 
 if(isset($_GET['tx'])){
 
@@ -135,17 +132,7 @@ if(isset($_GET['tx'])){
     $currency = $_GET['cc'];
     $transaction = $_GET['tx'];
     $status = $_GET['st'];
-    
 
-
-    $send_order = query("INSERT INTO orders (order_amount,order_transaction , 
-    order_status , order_currency) VALUES ('{$amount}','{$transaction}','{$currency}','{$status}')");
-
-confirm($send_order);
-
-   $last_id =  mysqli_insert_id($connection);
-
-   echo $last_id;
     
     $total = 0;
     $item_quantity = 0;
@@ -158,6 +145,9 @@ confirm($send_order);
 
                 //$length = strlen($name - 8);
                 $id = substr($name , 8 );
+                $send_order = query("INSERT INTO orders (order_amount,order_transaction , order_currency, order_status ) VALUES ('{$amount}','{$transaction}','{$currency}','{$status}')");
+                $last_id = last_id(); 
+                confirm($send_order);
 
                 $query = query("SELECT * FROM products WHERE product_id = ".escape_string($id)." ");
                 confirm($query);
@@ -168,10 +158,10 @@ confirm($send_order);
                     $sub = $row['product_price'] * $value  ;
                     $item_quantity  += $value;
                     $product_price = $row['product_price'];
-                    
+                    $product_title = $row['product_title'];
 
-                    $insert_report = query("INSERT INTO reports (product_id,product_price, 
-                    product_quantity) VALUES ('{$id}','{$product_price}','{$value}') ");
+                    $insert_report = query("INSERT INTO reports (product_id,order_id,product_title,product_price, 
+                    product_quantity) VALUES ('{$id}','{$last_id}','{$product_title}','{$product_price}','{$value}') ");
 
                     confirm($insert_report);
                 
@@ -179,7 +169,7 @@ confirm($send_order);
                 }//end of while
         
                 $total += $sub;
-                echo $item_quantity;   
+               
                 
             }//end of if
 
