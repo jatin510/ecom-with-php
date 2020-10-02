@@ -13,6 +13,17 @@
         <!--  navigation is in header.php -->
 
          <!-- Contact Section -->
+        <!-- -->
+
+
+        <div class="container">
+            <div class="block1">
+                <h1>Welcome to the website</h1>
+            </div>
+            <div class="block2">
+                <a href="google.com">Click here to search</a>
+            </div>
+        </div>
 
         <div class="container">
             <div class="row">
